@@ -1,0 +1,16 @@
+@startuml
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+skinparam wrapWidth 300
+LAYOUT_LANDSCAPE()
+
+title Social Network - Context Diagram
+
+Person(user, 'User')
+
+System(social_network, 'Social Network')
+
+Rel(user, social_network, "Adds/updates/deletes posts or comments, vies stats")
+
+@enduml

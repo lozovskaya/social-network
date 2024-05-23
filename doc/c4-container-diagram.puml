@@ -1,0 +1,48 @@
+@startuml
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+
+title Social Network - Container Diagram
+
+Person(user, 'User')
+
+Container(frontend, "Frontend", "User interface")
+
+System_Boundary(social_network, "Social Network") {
+    Container_Boundary(core, "Core") {
+        Container(core_service, "Core service", "Docker Container", "Client API, handles user registration and authentication")
+        ContainerDb(user_db, "Users Database", "PostgreSQL", "Stores user credentials and profiles")
+
+        Rel(core_service, user_db, "Stores/Retrieves User Data", "SQL")
+    }
+
+    Container_Boundary(posts, "Posts") {
+        Container(posts_service, "Posts Service", "Docker Container", "Manages creation, updating, and deletion of posts and comments")
+        ContainerDb(posts_db, "Posts and comments Database", "PostgreSQL", "Stores posts and comments")
+
+        Rel(posts_service, posts_db, "Stores/Retrieves Posts and Comments Data", "SQL")
+    }
+
+    Container_Boundary(stats, "Stats") {
+        Container(stats_service, "Stats Service", "Docker Container", "Collects stats")
+        ContainerDb(stats_db, "Stats Database", "Clickhouse", "Stores data on likes and views")
+
+        Rel(stats_service, stats_db, "Stores/Retrieves Stats Data", "SQL")
+    }
+    SystemQueue(message_broker, "Message Broker", "Kafka")
+
+
+    Rel(core_service, posts_service, 'Requests', 'gRPC')
+    Rel(core_service, stats_service, 'Requests', gRPC)
+
+    Rel(core_service, message_broker, 'Produces', 'Kafka')
+    Rel(message_broker, stats_service, 'Consumes', 'Kafka')
+}
+
+Rel(user, frontend, 'Interacts with')
+Rel(frontend, core_service, 'REST API')
+
+
+@enduml
