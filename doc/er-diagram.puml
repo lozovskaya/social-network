@@ -9,13 +9,23 @@ title Social network -- ER diagram
 entity "User" {
     * primary_key(user_id) : UUID
     * name : String
+    * surname : String
     * email : String
+    * birthday : DateTime
+    * phone_number : String
+}
+
+entity "Credentials" {
+    * primary_key(credentials_id) : UUID
+    * user_id : UUID
+    * login : String
     * password_hash : String
 }
 
+
 entity "Post" {
     * primary_key(post_id) : UUID
-    * user_id) : UUID
+    * user_id : UUID
     * content : Text
     * created_at : DateTime
     * edited_at : DateTime
@@ -39,6 +49,7 @@ entity "Stats" {
 
 User ||--o{ Post : "creates/updates/deletes"
 User ||--o{ Comment : "writes"
+User ||--o{ Credentials : "has"
 Post ||--o{ Comment : "has"
 Post ||--o{ Stats : "has"
 
