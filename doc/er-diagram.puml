@@ -26,6 +26,7 @@ entity "Credentials" {
 entity "Post" {
     * primary_key(post_id) : UUID
     * user_id : UUID
+    * title : Text
     * content : Text
     * created_at : DateTime
     * edited_at : DateTime

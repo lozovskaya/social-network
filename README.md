@@ -16,5 +16,5 @@ To run the service, do the following:
     ```
 3. Run docker-compose file:
     ```bash
-        docker compose up -d
+        docker compose up --build -d 
     ```
