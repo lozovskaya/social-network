@@ -6,7 +6,7 @@ info:
 servers:
   - url: https://localhost:80
 paths:
-  /register:
+  user/register:
     post:
       summary: Register a new user
       requestBody:
@@ -28,7 +28,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPException'
-  /login:
+  user/login:
     post:
       summary: Login a user
       requestBody:
@@ -50,7 +50,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPException'
-  /update:
+  user/update:
     put:
       summary: Update user data
       requestBody:
@@ -68,3 +68,105 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPException'
+  posts/create:
+    post:
+      summary: Create a new post
+      operationId: createPost
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+      responses:
+        '200':
+          description: Post created successfully
+          content:
+            application/json:
+              schema:
+                type: integer
+  posts/update:
+    put:
+      summary: Update an existing post
+      operationId: updatePost
+      parameters:
+        - name: post_id
+          in: query
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+      responses:
+        '200':
+          description: Post updated successfully
+        '404':
+          description: Post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPException'
+  posts/delete:
+    delete:
+      summary: Delete a post
+      operationId: deletePost
+      parameters:
+        - name: post_id
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Post deleted successfully
+  posts/:
+    get:
+      summary: Get a post by ID
+      operationId: getPost
+      parameters:
+        - name: post_id
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Post retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FullInfoPost'
+        '404':
+          description: Post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPException'
+  posts/list:
+    get:
+      summary: Get all posts
+      operationId: getAllPosts
+      parameters:
+        - name: page_number
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: page_size
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of posts retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FullInfoPost'

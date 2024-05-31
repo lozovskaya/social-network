@@ -9,8 +9,8 @@ import "google/protobuf/timestamp.proto";
 
 service PostService {
   rpc CreatePost (CreatePostRequest) returns (CreatePostResponse);
-  rpc UpdatePost (UpdatePostRequest) returns (EmptyResponse);
-  rpc DeletePost (DeletePostRequest) returns (EmptyResponse);
+  rpc UpdatePost (UpdatePostRequest) returns (StatusResponse);
+  rpc DeletePost (DeletePostRequest) returns (StatusResponse);
   rpc GetPostById (GetPostByIdRequest) returns (PostResponse);
   rpc ListPosts (ListPostsRequest) returns (ListPostsResponse);
 }
@@ -60,7 +60,12 @@ message ListPostsResponse {
 }
 
 message PostResponse {
-    Post post = 1;
+  Post post = 1;
+  int32 status = 2;
+}
+
+message StatusResponse {
+  int32 status = 1;
 }
 
 message EmptyResponse {}

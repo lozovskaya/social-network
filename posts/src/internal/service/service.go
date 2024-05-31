@@ -2,7 +2,6 @@ package post_service
 
 import (
 	"context"
-	"fmt"
 	pb "grpc-posts-server/api"
 	"grpc-posts-server/internal/domain"
 
@@ -28,32 +27,29 @@ func (s *PostService) CreatePost(ctx context.Context, req *pb.CreatePostRequest)
     return &pb.CreatePostResponse{Id: id}, nil
 }
 
-func (s *PostService) UpdatePost(ctx context.Context, req *pb.UpdatePostRequest) (*pb.EmptyResponse, error) {
+func (s *PostService) UpdatePost(ctx context.Context, req *pb.UpdatePostRequest) (*pb.StatusResponse, error) {
     err := s.model.Repository.UpdatePost(ctx, req.GetUserId(), domain.PostUpdate{Id: req.GetId(), Title: req.GetTitle(), Content: req.GetContent()})
     if err != nil {
-        return nil, err
+        return &pb.StatusResponse{Status: 1}, err
     }
-    return &pb.EmptyResponse{}, nil
+    return &pb.StatusResponse{Status: 0}, nil
 }
 
-func (s *PostService) DeletePost(ctx context.Context, req *pb.DeletePostRequest) (*pb.EmptyResponse, error) {
+func (s *PostService) DeletePost(ctx context.Context, req *pb.DeletePostRequest) (*pb.StatusResponse, error) {
     err := s.model.Repository.DeletePost(ctx, req.GetUserId(), req.GetId())
     if err != nil {
-        return nil, err
+        return &pb.StatusResponse{Status: 1}, err
     }
-    return &pb.EmptyResponse{}, nil
+    return &pb.StatusResponse{Status: 0}, nil
 }
 
 func (s *PostService) GetPostById(ctx context.Context, req *pb.GetPostByIdRequest) (*pb.PostResponse, error) {
     post, err := s.model.Repository.GetPostById(ctx, req.GetId())
     if err != nil {
-        return nil, err
-    }
-    if post == nil {
-        return nil, fmt.Errorf("post with the given id doesn't exist")
+        return &pb.PostResponse{Status: 1}, nil
     }
 
-    return &pb.PostResponse{Post: convertToPbPost(*post)}, nil
+    return &pb.PostResponse{Post: convertToPbPost(*post), Status: 0}, nil
 }
 
 func (s *PostService) ListPosts(ctx context.Context, req *pb.ListPostsRequest) (*pb.ListPostsResponse, error) {
