@@ -1,0 +1,45 @@
+@startuml
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+!define primary_key(x) <u>x</u>
+
+title Social network -- ER diagram
+
+entity "User" {
+    * primary_key(user_id) : UUID
+    * name : String
+    * email : String
+    * password_hash : String
+}
+
+entity "Post" {
+    * primary_key(post_id) : UUID
+    * user_id) : UUID
+    * content : Text
+    * created_at : DateTime
+    * edited_at : DateTime
+}
+
+entity "Comment" {
+    * primary_key(comment_id) : UUID
+    * post_id : UUID
+    * user_id : UUID
+    * parent_id : uuid
+    * content : Text
+    * created_at : DateTime
+}
+
+entity "Stats" {
+    * primary_key(stat_id) : UUID
+    * post_id : UUID
+    * likes : Integer
+    * views : Integer
+}
+
+User ||--o{ Post : "creates/updates/deletes"
+User ||--o{ Comment : "writes"
+Post ||--o{ Comment : "has"
+Post ||--o{ Stats : "has"
+
+@enduml
