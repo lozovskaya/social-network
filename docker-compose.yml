@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  # Database:
+  postgresql:
+    container_name: "social-network-postgresql"
+    image: postgres:15.5
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_MULTIPLE_DATABASES: gateway
+    ports:
+      - "5432:5432"
+    networks:
+      - social-network-network
+    volumes:
+      - ./tools/database-dev/configs/create-multiple-db-with-users.sh:/docker-entrypoint-initdb.d/create-multiple-db-with-users.sh:ro
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: "pg_isready -U postgres"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      
+  pgadmin:
+    container_name: "social-network-pgadmin"
+    image: dpage/pgadmin4
+    restart: unless-stopped
+    entrypoint: >
+      /bin/sh -c "
+      cp -f /pgadmin4/pgpass /var/lib/pgadmin/;
+      chmod 600 /var/lib/pgadmin/pgpass;
+      /entrypoint.sh
+      "
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+    ports:
+      - "8080:80"
+    networks:
+      - social-network-network
+    volumes:
+      - ./tools/database-dev/configs/servers.json:/pgadmin4/servers.json:ro
+      - ./tools/database-dev/configs/pgpass:/pgadmin4/pgpass:ro
+
+  # Migrations:
+  liquibase-gateway:
+    image: liquibase/liquibase:4.19.0
+    container_name: liquibase-gateway
+    networks:
+      - social-network-network
+    volumes:
+      - ./gateway/migrations:/app
+    command: --log-level ERROR  --defaultsFile=/app/dev.properties update
+    depends_on:
+      - pgadmin
+      - postgresql
+
+  # Service Gateway
+  gateway:
+    build:
+      context: ./gateway/src
+    container_name: gateway
+    networks:
+      - social-network-network
+    ports:
+      - "80:80"
+    depends_on:
+      - liquibase-gateway
+  
+networks:
+  social-network-network:
+    name: "social-network-network"
+  
+volumes:
+  db_data:

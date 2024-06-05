@@ -1,0 +1,70 @@
+openapi: 3.1.0
+info:
+  title: User Management API
+  version: 1.0.0
+  description: API for managing user registration, login, and updates.
+servers:
+  - url: https://localhost:80
+paths:
+  /register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+      responses:
+        '200':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: integer
+        '400':
+          description: Login is already taken
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPException'
+  /login:
+    post:
+      summary: Login a user
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OAuth2PasswordRequestForm'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '401':
+          description: Incorrect username or password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPException'
+  /update:
+    put:
+      summary: Update user data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserModel'
+      responses:
+        '200':
+          description: User data updated successfully
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPException'
