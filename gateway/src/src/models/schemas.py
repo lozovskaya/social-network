@@ -28,3 +28,17 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: Union[str, None] = None
+    
+
+class Post(BaseModel):
+    title : str
+    content : str
+
+
+class FullInfoPost(BaseModel):
+    post_id : int
+    user_id : int
+    title : str
+    content : str
+    created_at : datetime.datetime
+    edited_at : datetime.datetime
