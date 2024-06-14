@@ -98,6 +98,17 @@ services:
       - "50052:50052"
     depends_on:
       - liquibase-posts
+
+  # Service Statistics
+  statistics:
+    build:
+      context: .
+      dockerfile: ./statistics/src/Dockerfile
+    container_name: statistics
+    networks:
+      - social-network-network
+    ports:
+      - "1329:1329"
   
 networks:
   social-network-network:
