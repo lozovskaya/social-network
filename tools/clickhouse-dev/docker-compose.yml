@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  clickhouse-db:
+    image: clickhouse/clickhouse-server
+    container_name: social-network-clickhouse
+    restart: unless-stopped
+    ports:
+      - "8002:9000"
+      - "9123:8123"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - social-network-network
+
+networks:
+  social-network-network:
+    name: "social-network-network"

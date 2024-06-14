@@ -11,7 +11,7 @@ class UserRegister(BaseModel):
 class UserModel(BaseModel):
     name : str = Field(default=None)
     surname : str = Field(default=None)
-    birthday : datetime.datetime = Field(default=None)
+    birthday : datetime.date = Field(default=None)
     email : str = Field(default=None)
     phone_number : str = Field(default=None)
     

@@ -13,14 +13,14 @@ router = APIRouter(
 
 
 @router.post("/create", response_model=int)
-def new_post(new_post: Post, grpc_stub: PostServiceStub = Depends(get_stub), current_user_id: UserModel = Depends(security.get_current_user_id)):
+def new_post(new_post: Post, grpc_stub: PostServiceStub = Depends(get_stub), current_user_id: int = Depends(security.get_current_user_id)):
     response = grpc_stub.CreatePost(posts_pb2.CreatePostRequest(user_id=current_user_id, title=new_post.title, content=new_post.content))
 
     return response.id
 
 
 @router.put("/update", response_model=None)
-def update_post(post_id: int, updated_post: Post, grpc_stub: PostServiceStub = Depends(get_stub), current_user_id: UserModel = Depends(security.get_current_user_id)):
+def update_post(post_id: int, updated_post: Post, grpc_stub: PostServiceStub = Depends(get_stub), current_user_id: int = Depends(security.get_current_user_id)):
     response = grpc_stub.UpdatePost(posts_pb2.UpdatePostRequest(id=int(post_id), user_id=current_user_id, title=updated_post.title, content=updated_post.content))
 
     if int(response.status) != 0:
@@ -30,7 +30,7 @@ def update_post(post_id: int, updated_post: Post, grpc_stub: PostServiceStub = D
 
 
 @router.delete("/delete", response_model=None)
-def delete_post(post_id: int, grpc_stub: PostServiceStub = Depends(get_stub), current_user_id: UserModel = Depends(security.get_current_user_id)):
+def delete_post(post_id: int, grpc_stub: PostServiceStub = Depends(get_stub), current_user_id: int = Depends(security.get_current_user_id)):
     response = grpc_stub.DeletePost(posts_pb2.DeletePostRequest(id=int(post_id), user_id=current_user_id))
     return 
 
