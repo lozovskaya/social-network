@@ -6,6 +6,7 @@ import grpc
 import logging
 
 from common.kafka.producer_manager import KafkaProducer
+from src.protos.stats_pb2_grpc import StatsServiceStub
 from src.protos.posts_pb2_grpc import PostServiceStub
 from src.models import database
 
@@ -22,6 +23,9 @@ def get_stub():
     channel = grpc.insecure_channel("host.docker.internal:50052")
     return PostServiceStub(channel)
 
+def get_stub_stats():
+    channel = grpc.insecure_channel("statistics:1329")
+    return StatsServiceStub(channel)
 
 # Get a Kafka Producer instance
 

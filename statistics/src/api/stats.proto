@@ -1,0 +1,49 @@
+syntax = 'proto3';
+
+package stats_service;
+
+option go_package = "./";
+
+
+service StatsService {
+  rpc GetPostStats(GetPostStatsRequest) returns (GetPostStatsResponse);
+  rpc GetPopularPosts(GetPopularPostsRequest) returns (GetPopularPostsResponse);
+  rpc GetPopularUsers(GetPopularUsersRequest) returns (GetPopularUsersResponse);
+}
+
+message PostStatsByOneParameter {
+  int32 id = 1;
+  string user_login = 2;
+  int32 count = 3;
+}
+
+message GetPostStatsRequest {
+  int32 id = 1;
+}
+
+message GetPostStatsResponse {
+    int32 likes = 1;
+    int32 views = 2; 
+}
+
+message GetPopularPostsRequest {
+  string action_type = 1;
+  int32 size = 2;
+}
+
+message GetPopularPostsResponse {
+    repeated PostStatsByOneParameter posts = 1;
+}
+
+message GetPopularUsersRequest {
+  int32 count = 1;
+}
+
+message UserInfo {
+    string login = 1;
+    int32 likes = 2;
+}
+
+message GetPopularUsersResponse {
+    repeated UserInfo users = 1;
+}

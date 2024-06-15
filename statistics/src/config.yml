@@ -1,0 +1,2 @@
+grpc_port: ":1329"
+database_url: "http://clickhouse-db:8123"
