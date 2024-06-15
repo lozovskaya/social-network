@@ -42,6 +42,7 @@ async def new_view(post_id: str, grpc_stub: PostServiceStub = Depends(get_stub),
                                                                  "current_user_id": current_user_id, 
                                                                  "time_stamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                                                                  "post_owner": owner})
+    # todo: add background tasks
 
 @router.get("/post/{post_id}")
 def get_post_stats(post_id: int, grpc_stub: StatsServiceStub = Depends(get_stub_stats)):

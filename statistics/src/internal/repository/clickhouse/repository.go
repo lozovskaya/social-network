@@ -21,7 +21,6 @@ func (r *Repository) GetPostStats(ctx context.Context, postID int32) (domain.Pos
 		SELECT countDistinct(user_id)
 		FROM post_likes
 		WHERE post_id = $1
-		GROUP BY post_id
 	`, postID).Scan(&numLikes)
 	if err == sql.ErrNoRows {
 		numLikes = 0
@@ -34,7 +33,6 @@ func (r *Repository) GetPostStats(ctx context.Context, postID int32) (domain.Pos
 		SELECT countDistinct(user_id)
 		FROM post_views
 		WHERE post_id = $1
-		GROUP BY post_id
 	`, postID).Scan(&numViews)
 	if err == sql.ErrNoRows {
 		numViews = 0

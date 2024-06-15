@@ -14,31 +14,26 @@ SETTINGS
 
 
 CREATE TABLE post_views (
-    id UUID,
     post_id UInt64,
     time_stamp DateTime,
     user_id UInt64,
     post_owner UInt64
 ) ENGINE = MergeTree
-PRIMARY KEY (id)
-ORDER BY id;
+ORDER BY post_id;
 
 
 CREATE TABLE post_likes (
-    id UUID,
     post_id UInt64,
     time_stamp DateTime,
     user_id UInt64,
     post_owner UInt64
 ) ENGINE = MergeTree
-PRIMARY KEY (id)
-ORDER BY id;
+ORDER BY post_id;
 
 
 CREATE MATERIALIZED VIEW kafka_to_post_views
 TO post_views
 AS SELECT
-    generateUUIDv4() AS id,
     post_id,
     time_stamp,
     current_user_id AS user_id,
@@ -50,7 +45,6 @@ WHERE type_action = 'view';
 CREATE MATERIALIZED VIEW kafka_to_post_likes
 TO post_likes
 AS SELECT
-    generateUUIDv4() AS id,
     post_id,
     time_stamp,
     current_user_id AS user_id,
