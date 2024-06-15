@@ -43,8 +43,8 @@ def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Sessio
     return Token(access_token=access_token, token_type="bearer")
 
 
-@router.put("/update", response_model=None)
-def update_user_data(args: UserModel, db: Session = Depends(get_db), current_user_id: UserModel = Depends(security.get_current_user_id)):
+@router.put("/", response_model=None)
+def update_user_data(args: UserModel, db: Session = Depends(get_db), current_user_id: int = Depends(security.get_current_user_id)):
     db_user = crud_users.get_user_by_user_id(db, current_user_id)
     if db_user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")

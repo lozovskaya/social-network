@@ -1,5 +1,9 @@
 version: '3.8'
 
+include:
+  - ./tools/kafka-dev/docker-compose.yml
+  - ./tools/clickhouse-dev/docker-compose.yml
+
 services:
   # Databases:
   postgresql:
@@ -73,8 +77,9 @@ services:
   # Service Gateway
   gateway:
     build:
-      context: ./gateway/src
-    container_name: gateway
+      context: .
+      dockerfile: ./gateway/src/Dockerfile
+    container_name: social-network-gateway
     networks:
       - social-network-network
     ports:
@@ -93,6 +98,17 @@ services:
       - "50052:50052"
     depends_on:
       - liquibase-posts
+
+  # Service Statistics
+  statistics:
+    build:
+      context: .
+      dockerfile: ./statistics/src/Dockerfile
+    container_name: statistics
+    networks:
+      - social-network-network
+    ports:
+      - "1329:1329"
   
 networks:
   social-network-network:

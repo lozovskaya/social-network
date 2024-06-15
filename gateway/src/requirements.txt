@@ -13,3 +13,4 @@ python-multipart==0.0.9
 grpcio==1.64.0
 grpcio-tools==1.64.0
 protobuf==5.27.0
+aiokafka==0.10.0

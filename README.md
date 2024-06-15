@@ -18,3 +18,22 @@ To run the service, do the following:
     ```bash
         docker compose up --build -d 
     ```
+4. To check the state of the Clickhouse database:
+    ```bash
+       docker exec -it social-network-clickhouse clickhouse-client
+    ```
+    ```bash
+        SELECT * FROM post_views;
+        SELECT * FROM post_likes;
+    ```
+    or
+    ```bash
+        docker run -p 5521:5521 ghcr.io/caioricciuti/ch-ui:latest
+    ```
+    user: default
+
+    logs:
+    ```
+        docker exec -it social-network-clickhouse cat /var/log/clickhouse-server/clickhouse-server.log
+        docker exec -it social-network-clickhouse cat /var/log/clickhouse-server/clickhouse-server.err.log
+    ```
