@@ -102,8 +102,7 @@ services:
   # Service Statistics
   statistics:
     build:
-      context: .
-      dockerfile: ./statistics/src/Dockerfile
+      context: ./statistics/src/
     container_name: statistics
     networks:
       - social-network-network
